@@ -60,7 +60,7 @@
                 case '/':
                     if (Match('/'))
                     {
-                        AdvanceWhile(c => c != '\n' && !IsAtEnd);
+                        AdvanceWhile(c => c != '\n');
                         return CreateToken(TokenType.Comment);
                     }
                     return CreateToken(TokenType.Slash);
@@ -108,14 +108,7 @@
 
         private Token ScanStringToken()
         {
-            while (Peek() != '"' && !IsAtEnd)
-            {
-                if (Peek() == '\n')
-                {
-                    _line += 1;
-                }
-                Advance();
-            }
+            AdvanceWhile(c => c != '"');
             if (IsAtEnd)
             {
                 throw new ScannerException(_line, "Unterminated string.");
@@ -150,9 +143,15 @@
 
         private void AdvanceWhile(Predicate<char> predicate)
         {
-            while (predicate(Peek()))
+            var @char = Peek();
+            while (predicate(@char) && !IsAtEnd)
             {
+                if (@char == '\n')
+            {
+                    _line += 1;
+                }
                 Advance();
+                @char = Peek();
             }
         }
 
