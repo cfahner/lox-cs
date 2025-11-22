@@ -63,6 +63,14 @@
                         AdvanceWhile(c => c != '\n');
                         return CreateToken(TokenType.Comment);
                     }
+                    else if (Match('*'))
+                    {
+                        AdvanceWhile(c => c != '*' && PeekNext() != '/');
+                        // ensure the final "*/" is part of the comment
+                        Advance();
+                        Advance();
+                        return CreateToken(TokenType.Comment);
+                    }
                     return CreateToken(TokenType.Slash);
                 case ' ':
                 case '\t':
@@ -147,7 +155,7 @@
             while (predicate(@char) && !IsAtEnd)
             {
                 if (@char == '\n')
-            {
+                {
                     _line += 1;
                 }
                 Advance();
