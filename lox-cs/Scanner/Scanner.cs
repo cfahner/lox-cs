@@ -67,8 +67,7 @@
                     {
                         AdvanceWhile(c => c != '*' && PeekNext() != '/');
                         // ensure the final "*/" is part of the comment
-                        Advance();
-                        Advance();
+                        Advance(2);
                         return CreateToken(TokenType.Comment);
                     }
                     return CreateToken(TokenType.Slash);
@@ -163,9 +162,9 @@
             }
         }
 
-        private void Advance()
+        private void Advance(int amount = 1)
         {
-            _current += 1;
+            _current += amount;
         }
 
         private char Peek()
