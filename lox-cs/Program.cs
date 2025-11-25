@@ -1,13 +1,10 @@
-﻿using Lox.Scanner;
+﻿using Lox.Parser;
+using Lox.Parser.Visitors;
+using Lox.Scanner;
 
 internal class Program
 {
     private static bool _hadError = false;
-
-    public static void Error(int line, string message)
-    {
-        Report(line, "", message);
-    }
 
     private static void Main(string[] args)
     {
@@ -57,15 +54,33 @@ internal class Program
     {
         try
         {
-            foreach (var token in new Scanner(source).Scan())
+            var parser = new Parser([.. new Scanner(source).Scan()]);
+            var expr = parser.Parse();
+            if (expr is null || parser.AccumulatedErrors.Any())
             {
-                Console.WriteLine(token);
+                ReportParseErrors(parser.AccumulatedErrors);
+                return;
             }
+            Console.WriteLine(new AstPrinter().Print(expr));
         }
         catch (ScannerException scanException)
         {
-            Error(scanException.Line, scanException.Message);
+            Report(scanException.Line, string.Empty, scanException.Message);
         }
+    }
+
+    private static void ReportParseErrors(IEnumerable<ParseError> errors)
+    {
+        foreach (var error in errors)
+        {
+            Report(error.Token, error.Message);
+            return;
+        }
+    }
+
+    private static void Report(Token token, string message)
+    {
+        Report(token.Line, token.Type == TokenType.Eof ? " at end" : $" at '{token.Lexeme}'", message);
     }
 
     private static void Report(int line, string where, string message)
