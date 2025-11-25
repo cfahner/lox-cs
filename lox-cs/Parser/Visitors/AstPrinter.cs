@@ -13,7 +13,7 @@ namespace Lox.Parser.Visitors
             => Parenthesize("group", grouping.Expression);
 
         public string VisitLiteral(Expr.Literal literal)
-            => literal.Value.ToString() ?? "nil";
+            => literal.Value?.ToString() ?? "nil";
 
         public string VisitUnary(Expr.Unary unary)
             => Parenthesize(unary.Operator.Lexeme, unary.Right);
