@@ -14,7 +14,7 @@ namespace Lox.Parser
             public override R Accept<R>(IExprVisitor<R> visitor) => visitor.VisitGrouping(this);
         }
 
-        public record Literal(object Value) : Expr
+        public record Literal(object? Value) : Expr
         {
             public override R Accept<R>(IExprVisitor<R> visitor) => visitor.VisitLiteral(this);
         }
