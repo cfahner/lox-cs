@@ -67,7 +67,9 @@ namespace Lox.Interpreter
         private static double Divide(Token token, object? left, object? right)
         {
             var (leftDouble, rightDouble) = TypeError.ThrowIfNotNumbers(token, left, right);
-            return leftDouble / rightDouble;
+            return rightDouble == 0.0
+                ? throw new DivisionByZeroError(token)
+                : leftDouble / rightDouble;
         }
 
         private static string Stringify(object? value)
