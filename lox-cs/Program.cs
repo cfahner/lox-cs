@@ -1,10 +1,14 @@
-﻿using Lox.Parser;
-using Lox.Parser.Visitors;
+﻿using Lox.Interpreter;
+using Lox.Parser;
 using Lox.Scanner;
 
 internal class Program
 {
     private static bool _hadError = false;
+
+    private static bool _hadRuntimeError = false;
+
+    private static readonly Interpreter _interpreter = new();
 
     private static void Main(string[] args)
     {
@@ -31,6 +35,10 @@ internal class Program
         {
             Environment.Exit(65);
         }
+        if (_hadRuntimeError)
+        {
+            Environment.Exit(70);
+        }
     }
 
     private static void RunPrompt()
@@ -42,6 +50,7 @@ internal class Program
             {
                 Run(line);
                 _hadError = false;
+                _hadRuntimeError = false;
             }
             else
             {
@@ -61,11 +70,15 @@ internal class Program
                 ReportParseErrors(parser.AccumulatedErrors);
                 return;
             }
-            Console.WriteLine(new AstPrinter().Print(expr));
+            _interpreter.Interpret(expr);
         }
         catch (ScannerException scanException)
         {
             Report(scanException.Line, string.Empty, scanException.Message);
+        }
+        catch (RuntimeError runTimeError)
+        {
+            Report(runTimeError);
         }
     }
 
@@ -76,6 +89,12 @@ internal class Program
             Report(error.Token, error.Message);
             return;
         }
+    }
+
+    private static void Report(RuntimeError runTimeError)
+    {
+        Console.Error.WriteLine($"{runTimeError.Message}\n[line {runTimeError.Token.Line}]");
+        _hadRuntimeError = true;
     }
 
     private static void Report(Token token, string message)
