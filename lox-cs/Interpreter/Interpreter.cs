@@ -53,9 +53,9 @@ namespace Lox.Interpreter
         {
             return left is double lDouble && right is double rDouble
                 ? lDouble + rDouble
-                : left is string && right is string
+                : left is string || right is string
                 ? $"{left}{right}"
-                : throw new TypeError(token, "Expected operands to either be both strings or both numbers.");
+                : throw new TypeError(token, "Expected '+' operands to be both numbers or one to be a string.");
         }
 
         private static double Multiply(Token token, object? left, object? right)
