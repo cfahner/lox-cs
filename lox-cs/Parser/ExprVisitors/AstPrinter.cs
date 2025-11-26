@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Lox.Parser.Visitors
+namespace Lox.Parser.ExprVisitors
 {
     public sealed class AstPrinter : IExprVisitor<string>
     {
