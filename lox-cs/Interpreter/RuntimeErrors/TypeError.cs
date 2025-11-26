@@ -10,15 +10,15 @@ namespace Lox.Interpreter.RuntimeErrors
             {
                 return (leftDouble, rightDouble);
             }
+            if (left is not double && right is not double)
+            {
+                throw new TypeError(token, $"Neither left nor right operand of '{token.Lexeme}' is a number.");
+            }
             if (left is not double)
             {
-                throw new TypeError(token, "Left operand is not a number.");
+                throw new TypeError(token, $"Left operand of '{token.Lexeme}' is not a number.");
             }
-            if (right is not double)
-            {
-                throw new TypeError(token, "Right operand is not a number.");
-            }
-            throw new TypeError(token, "Neither left nor right operand is a number.");
+            throw new TypeError(token, $"Right operand of '{token.Lexeme}' is not a number.");
         }
     }
 }
