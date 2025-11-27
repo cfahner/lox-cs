@@ -62,20 +62,20 @@ namespace Lox.Interpreter
             };
         }
 
-        public object? VisitExpression(Stmt.Expression stmt)
+        public object? VisitExpressionStmt(Stmt.Expression stmt)
         {
             _ = Evaluate(stmt.Expr);
             return null;
         }
 
-        public object? VisitPrint(Stmt.Print stmt)
+        public object? VisitPrintStmt(Stmt.Print stmt)
         {
             var value = Evaluate(stmt.Expr);
             Console.WriteLine(Conversions.Stringify(value));
             return null;
         }
 
-        public object? VisitVar(Stmt.Var stmt)
+        public object? VisitVarStmt(Stmt.Var stmt)
         {
             throw new NotImplementedException();
         }

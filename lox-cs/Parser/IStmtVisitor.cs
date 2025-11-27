@@ -2,10 +2,10 @@
 {
     public interface IStmtVisitor<R>
     {
-        R VisitExpression(Stmt.Expression stmt);
+        R VisitExpressionStmt(Stmt.Expression stmt);
 
-        R VisitPrint(Stmt.Print stmt);
+        R VisitPrintStmt(Stmt.Print stmt);
 
-        R VisitVar(Stmt.Var stmt);
+        R VisitVarStmt(Stmt.Var stmt);
     }
 }
