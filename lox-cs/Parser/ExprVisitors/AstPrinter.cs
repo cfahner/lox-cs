@@ -15,6 +15,9 @@ namespace Lox.Parser.ExprVisitors
         public string VisitLiteral(Expr.Literal literal)
             => literal.Value?.ToString() ?? "nil";
 
+        public string VisitVariable(Expr.Variable expr)
+            => $"(var '{expr.Name}')";
+
         public string VisitUnary(Expr.Unary unary)
             => Parenthesize(unary.Operator.Lexeme, unary.Right);
 

@@ -2,12 +2,14 @@
 {
     public interface IExprVisitor<R>
     {
-        R VisitBinary(Expr.Binary binary);
+        R VisitBinary(Expr.Binary expr);
 
-        R VisitGrouping(Expr.Grouping grouping);
+        R VisitGrouping(Expr.Grouping expr);
 
-        R VisitLiteral(Expr.Literal literal);
+        R VisitLiteral(Expr.Literal expr);
 
-        R VisitUnary(Expr.Unary unary);
+        R VisitVariable(Expr.Variable expr);
+
+        R VisitUnary(Expr.Unary expr);
     }
 }

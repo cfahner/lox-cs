@@ -5,5 +5,7 @@
         R VisitExpression(Stmt.Expression stmt);
 
         R VisitPrint(Stmt.Print stmt);
+
+        R VisitVar(Stmt.Var stmt);
     }
 }

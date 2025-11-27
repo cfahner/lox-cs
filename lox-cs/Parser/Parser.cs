@@ -15,7 +15,22 @@ namespace Lox.Parser
         {
             while (!IsAtEnd)
             {
-                yield return Statement();
+                yield return Declaration();
+            }
+        }
+
+        private Stmt Declaration()
+        {
+            try
+            {
+                return Match(TokenType.Var)
+                    ? VarDeclaration()
+                    : Statement();
+            }
+            catch (ParseError)
+            {
+                Synchronize();
+                return new Stmt.Expression(new Expr.Literal(null));
             }
         }
 
@@ -29,8 +44,20 @@ namespace Lox.Parser
         private Stmt.Print PrintStatement()
         {
             var value = Expression();
-            _ = Consume(TokenType.Semicolon, "Expecting ';' after print value.");
+            _ = Consume(TokenType.Semicolon, "Expected ';' after print value.");
             return new Stmt.Print(value);
+        }
+
+        private Stmt.Var VarDeclaration()
+        {
+            var name = Consume(TokenType.Identifier, "Expected variable name after 'var'.");
+
+            var initializer = Match(TokenType.Equal)
+                ? Expression()
+                : null;
+
+            _ = Consume(TokenType.Semicolon, "Expected ';' after variable declaration.");
+            return new Stmt.Var(name, initializer);
         }
 
         private Stmt.Expression ExpressionStatement()
@@ -107,6 +134,10 @@ namespace Lox.Parser
             if (Match(TokenType.Number, TokenType.String))
             {
                 return new Expr.Literal(Previous().Literal);
+            }
+            if (Match(TokenType.Identifier))
+            {
+                return new Expr.Variable(Previous());
             }
             if (Match(TokenType.LeftParenthesis))
             {

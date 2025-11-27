@@ -90,42 +90,47 @@ namespace Lox.Interpreter
             }
         }
 
-        public object? VisitBinary(Expr.Binary binary)
+        public object? VisitBinary(Expr.Binary expr)
         {
-            var left = Evaluate(binary.Left);
-            var right = Evaluate(binary.Right);
+            var left = Evaluate(expr.Left);
+            var right = Evaluate(expr.Right);
 
-            return binary.Operator.Type switch
+            return expr.Operator.Type switch
             {
-                TokenType.Greater => IsGreater(binary.Operator, left, right),
-                TokenType.GreaterEqual => IsGreaterEqual(binary.Operator, left, right),
-                TokenType.Less => IsLess(binary.Operator, left, right),
-                TokenType.LessEqual => IsLessEqual(binary.Operator, left, right),
+                TokenType.Greater => IsGreater(expr.Operator, left, right),
+                TokenType.GreaterEqual => IsGreaterEqual(expr.Operator, left, right),
+                TokenType.Less => IsLess(expr.Operator, left, right),
+                TokenType.LessEqual => IsLessEqual(expr.Operator, left, right),
                 TokenType.BangEqual => !IsEqual(left, right),
                 TokenType.EqualEqual => IsEqual(left, right),
-                TokenType.Minus => Subtract(binary.Operator, left, right),
-                TokenType.Plus => Add(binary.Operator, left, right),
-                TokenType.Slash => Divide(binary.Operator, left, right),
-                TokenType.Asterisk => Multiply(binary.Operator, left, right),
+                TokenType.Minus => Subtract(expr.Operator, left, right),
+                TokenType.Plus => Add(expr.Operator, left, right),
+                TokenType.Slash => Divide(expr.Operator, left, right),
+                TokenType.Asterisk => Multiply(expr.Operator, left, right),
                 _ => null
             };
         }
 
-        public object? VisitGrouping(Expr.Grouping grouping)
+        public object? VisitGrouping(Expr.Grouping expr)
         {
-            return Evaluate(grouping.Expression);
+            return Evaluate(expr.Expression);
         }
 
-        public object? VisitLiteral(Expr.Literal literal)
+        public object? VisitLiteral(Expr.Literal expr)
         {
-            return literal.Value;
+            return expr.Value;
         }
 
-        public object? VisitUnary(Expr.Unary unary)
+        public object? VisitVariable(Expr.Variable expr)
         {
-            var right = Evaluate(unary.Right);
+            throw new NotImplementedException();
+        }
 
-            return unary.Operator.Type switch
+        public object? VisitUnary(Expr.Unary expr)
+        {
+            var right = Evaluate(expr.Right);
+
+            return expr.Operator.Type switch
             {
                 TokenType.Minus => right is null ? 0.0 : -(double)right,
                 TokenType.Bang => !IsTruthy(right),
@@ -144,6 +149,11 @@ namespace Lox.Interpreter
             var value = Evaluate(stmt.Expr);
             Console.WriteLine(Stringify(value));
             return null;
+        }
+
+        public object? VisitVar(Stmt.Var stmt)
+        {
+            throw new NotImplementedException();
         }
 
         private object? Evaluate(Expr expr) => expr.Accept(this);
