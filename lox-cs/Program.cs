@@ -64,13 +64,20 @@ internal class Program
         try
         {
             var parser = new Parser([.. new Scanner(source).Scan()]);
-            var expr = parser.Parse();
-            if (expr is null || parser.AccumulatedErrors.Any())
+            var stmts = parser.Parse();
+            try
+            {
+                // stmts is a generator function, so the stack only gets unwound when it is actually used
+                // which is why the Interpret() step needs to be try-catched, and not Parse()
+                _interpreter.Interpret(stmts);
+            }
+            catch (ParseError)
+            {
+            }
+            if (parser.AccumulatedErrors.Any())
             {
                 ReportParseErrors(parser.AccumulatedErrors);
-                return;
             }
-            _interpreter.Interpret(expr);
         }
         catch (ScannerException scanException)
         {

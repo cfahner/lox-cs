@@ -11,16 +11,33 @@ namespace Lox.Parser
 
         private int _current = 0;
 
-        public Expr? Parse()
+        public IEnumerable<Stmt> Parse()
         {
-            try
+            while (!IsAtEnd)
             {
-                return Expression();
+                yield return Statement();
             }
-            catch (ParseError)
-            {
-                return null;
-            }
+        }
+
+        private Stmt Statement()
+        {
+            return Match(TokenType.Print)
+                ? PrintStatement()
+                : ExpressionStatement();
+        }
+
+        private Stmt.Print PrintStatement()
+        {
+            var value = Expression();
+            _ = Consume(TokenType.Semicolon, "Expecting ';' after print value.");
+            return new Stmt.Print(value);
+        }
+
+        private Stmt.Expression ExpressionStatement()
+        {
+            var expr = Expression();
+            _ = Consume(TokenType.Semicolon, "Expecting ';' after expression.");
+            return new Stmt.Expression(expr);
         }
 
         private Expr Expression()

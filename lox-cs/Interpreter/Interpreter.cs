@@ -4,7 +4,7 @@ using Lox.Scanner;
 
 namespace Lox.Interpreter
 {
-    public class Interpreter : IExprVisitor<object?>
+    public class Interpreter : IExprVisitor<object?>, IStmtVisitor<object?>
     {
         private static bool IsTruthy(object? value) => value switch
         {
@@ -82,10 +82,12 @@ namespace Lox.Interpreter
             } ?? string.Empty;
         }
 
-        public void Interpret(Expr expr)
+        public void Interpret(IEnumerable<Stmt> stmts)
         {
-            var value = Evaluate(expr);
-            Console.WriteLine(Stringify(value));
+            foreach (var stmt in stmts)
+            {
+                _ = Execute(stmt);
+            }
         }
 
         public object? VisitBinary(Expr.Binary binary)
@@ -131,6 +133,21 @@ namespace Lox.Interpreter
             };
         }
 
+        public object? VisitExpression(Stmt.Expression stmt)
+        {
+            _ = Evaluate(stmt.Expr);
+            return null;
+        }
+
+        public object? VisitPrint(Stmt.Print stmt)
+        {
+            var value = Evaluate(stmt.Expr);
+            Console.WriteLine(Stringify(value));
+            return null;
+        }
+
         private object? Evaluate(Expr expr) => expr.Accept(this);
+
+        private object? Execute(Stmt stmt) => stmt.Accept(this);
     }
 }
