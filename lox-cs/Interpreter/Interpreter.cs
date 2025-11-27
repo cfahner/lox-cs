@@ -1,4 +1,4 @@
-﻿using Lox.Interpreter.RuntimeErrors;
+﻿using Lox.Interpreter.Operations;
 using Lox.Parser;
 using Lox.Scanner;
 
@@ -12,65 +12,6 @@ namespace Lox.Interpreter
             bool boolValue => boolValue,
             _ => true
         };
-
-        private static bool IsEqual(object? left, object? right)
-        {
-            return left is double lDouble && right is double rDouble && Math.Abs(lDouble - rDouble) < lDouble * .01
-                || left == right;
-        }
-
-        private static bool IsGreater(Token token, object? left, object? right)
-        {
-            var (leftDouble, rightDouble) = TypeError.ThrowIfNotNumbers(token, left, right);
-            return leftDouble > rightDouble;
-        }
-
-        private static bool IsGreaterEqual(Token token, object? left, object? right)
-        {
-            var (leftDouble, rightDouble) = TypeError.ThrowIfNotNumbers(token, left, right);
-            return leftDouble >= rightDouble;
-        }
-
-        private static bool IsLess(Token token, object? left, object? right)
-        {
-            var (leftDouble, rightDouble) = TypeError.ThrowIfNotNumbers(token, left, right);
-            return leftDouble < rightDouble;
-        }
-
-        private static bool IsLessEqual(Token token, object? left, object? right)
-        {
-            var (leftDouble, rightDouble) = TypeError.ThrowIfNotNumbers(token, left, right);
-            return leftDouble <= rightDouble;
-        }
-
-        private static double Subtract(Token token, object? left, object? right)
-        {
-            var (leftDouble, rightDouble) = TypeError.ThrowIfNotNumbers(token, left, right);
-            return leftDouble - rightDouble;
-        }
-
-        private static object Add(Token token, object? left, object? right)
-        {
-            return left is double lDouble && right is double rDouble
-                ? lDouble + rDouble
-                : left is string || right is string
-                ? $"{left}{right}"
-                : throw new TypeError(token, "Expected '+' operands to be both numbers or one to be a string.");
-        }
-
-        private static double Multiply(Token token, object? left, object? right)
-        {
-            var (leftDouble, rightDouble) = TypeError.ThrowIfNotNumbers(token, left, right);
-            return leftDouble * rightDouble;
-        }
-
-        private static double Divide(Token token, object? left, object? right)
-        {
-            var (leftDouble, rightDouble) = TypeError.ThrowIfNotNumbers(token, left, right);
-            return rightDouble == 0.0
-                ? throw new DivisionByZeroError(token)
-                : leftDouble / rightDouble;
-        }
 
         private static string Stringify(object? value)
         {
@@ -97,16 +38,16 @@ namespace Lox.Interpreter
 
             return expr.Operator.Type switch
             {
-                TokenType.Greater => IsGreater(expr.Operator, left, right),
-                TokenType.GreaterEqual => IsGreaterEqual(expr.Operator, left, right),
-                TokenType.Less => IsLess(expr.Operator, left, right),
-                TokenType.LessEqual => IsLessEqual(expr.Operator, left, right),
-                TokenType.BangEqual => !IsEqual(left, right),
-                TokenType.EqualEqual => IsEqual(left, right),
-                TokenType.Minus => Subtract(expr.Operator, left, right),
-                TokenType.Plus => Add(expr.Operator, left, right),
-                TokenType.Slash => Divide(expr.Operator, left, right),
-                TokenType.Asterisk => Multiply(expr.Operator, left, right),
+                TokenType.Greater => BinaryOperations.IsGreater(expr.Operator, left, right),
+                TokenType.GreaterEqual => BinaryOperations.IsGreaterEqual(expr.Operator, left, right),
+                TokenType.Less => BinaryOperations.IsLess(expr.Operator, left, right),
+                TokenType.LessEqual => BinaryOperations.IsLessEqual(expr.Operator, left, right),
+                TokenType.BangEqual => !BinaryOperations.IsEqual(left, right),
+                TokenType.EqualEqual => BinaryOperations.IsEqual(left, right),
+                TokenType.Minus => BinaryOperations.Subtract(expr.Operator, left, right),
+                TokenType.Plus => BinaryOperations.Add(expr.Operator, left, right),
+                TokenType.Slash => BinaryOperations.Divide(expr.Operator, left, right),
+                TokenType.Asterisk => BinaryOperations.Multiply(expr.Operator, left, right),
                 _ => null
             };
         }
