@@ -2,8 +2,8 @@
 {
     public interface IStmtVisitor<R>
     {
-        R VisitExpression(Stmt.Expression expression);
+        R VisitExpression(Stmt.Expression stmt);
 
-        R VisitPrint(Stmt.Print print);
+        R VisitPrint(Stmt.Print stmt);
     }
 }
