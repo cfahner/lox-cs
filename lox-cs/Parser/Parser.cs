@@ -164,6 +164,7 @@ namespace Lox.Parser
 
         private Token Consume(TokenType type, string message)
         {
+            DiscardNonCode();
             return Check(type) ? Advance() : throw Error(Peek(), message);
         }
 
