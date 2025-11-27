@@ -6,23 +6,6 @@ namespace Lox.Interpreter
 {
     public class Interpreter : IExprVisitor<object?>, IStmtVisitor<object?>
     {
-        private static bool IsTruthy(object? value) => value switch
-        {
-            null => false,
-            bool boolValue => boolValue,
-            _ => true
-        };
-
-        private static string Stringify(object? value)
-        {
-            return value switch
-            {
-                null => "nil",
-                double doubleValue => $"{doubleValue}",
-                _ => value.ToString()
-            } ?? string.Empty;
-        }
-
         public void Interpret(IEnumerable<Stmt> stmts)
         {
             foreach (var stmt in stmts)
@@ -74,7 +57,7 @@ namespace Lox.Interpreter
             return expr.Operator.Type switch
             {
                 TokenType.Minus => right is null ? 0.0 : -(double)right,
-                TokenType.Bang => !IsTruthy(right),
+                TokenType.Bang => !Conversions.ToTruthy(right),
                 _ => null
             };
         }
@@ -88,7 +71,7 @@ namespace Lox.Interpreter
         public object? VisitPrint(Stmt.Print stmt)
         {
             var value = Evaluate(stmt.Expr);
-            Console.WriteLine(Stringify(value));
+            Console.WriteLine(Conversions.Stringify(value));
             return null;
         }
 
