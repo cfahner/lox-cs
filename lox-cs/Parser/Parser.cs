@@ -102,6 +102,7 @@ namespace Lox.Parser
 
         private bool Match(params TokenType[] tokenTypes)
         {
+            DiscardNonCode();
             foreach (var tokenType in tokenTypes)
             {
                 if (Check(tokenType))
@@ -130,6 +131,14 @@ namespace Lox.Parser
         private bool Check(TokenType tokenType)
         {
             return !IsAtEnd && Peek().Type == tokenType;
+        }
+
+        private void DiscardNonCode()
+        {
+            while (!IsAtEnd && Peek().Type is TokenType.Whitespace or TokenType.Comment)
+            {
+                _current += 1;
+            }
         }
 
         private Token Peek()
