@@ -4,14 +4,14 @@
     {
         public record Expression(Expr Expr) : Stmt
         {
-            public override void Accept(IStmtVisitor visitor) => visitor.VisitExpression(this);
+            public override R Accept<R>(IStmtVisitor<R> visitor) => visitor.VisitExpression(this);
         }
 
         public record Print(Expr Expr) : Stmt
         {
-            public override void Accept(IStmtVisitor visitor) => visitor.VisitPrint(this);
+            public override R Accept<R>(IStmtVisitor<R> visitor) => visitor.VisitPrint(this);
         }
 
-        public abstract void Accept(IStmtVisitor visitor);
+        public abstract R Accept<R>(IStmtVisitor<R> visitor);
     }
 }
