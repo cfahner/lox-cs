@@ -6,6 +6,8 @@ namespace Lox.Interpreter
 {
     public class Interpreter : IExprVisitor<object?>, IStmtVisitor<object?>
     {
+        private readonly Environment _environment = new();
+
         public void Interpret(IEnumerable<Stmt> stmts)
         {
             foreach (var stmt in stmts)
@@ -47,7 +49,7 @@ namespace Lox.Interpreter
 
         public object? VisitVariable(Expr.Variable expr)
         {
-            throw new NotImplementedException();
+            return _environment.Get(expr.Name);
         }
 
         public object? VisitUnary(Expr.Unary expr)
@@ -77,7 +79,14 @@ namespace Lox.Interpreter
 
         public object? VisitVarStmt(Stmt.Var stmt)
         {
-            throw new NotImplementedException();
+            object? value = null;
+            if (stmt.Initializer is not null)
+            {
+                value = Evaluate(stmt.Initializer);
+            }
+
+            _environment.Define(stmt.Name.Lexeme, value);
+            return null;
         }
 
         private object? Evaluate(Expr expr) => expr.Accept(this);
