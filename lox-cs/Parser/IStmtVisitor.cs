@@ -1,9 +1,9 @@
 ﻿namespace Lox.Parser
 {
-    public interface IStmtVisitor
+    public interface IStmtVisitor<R>
     {
-        void VisitExpression(Stmt.Expression expression);
+        R VisitExpression(Stmt.Expression expression);
 
-        void VisitPrint(Stmt.Print print);
+        R VisitPrint(Stmt.Print print);
     }
 }
