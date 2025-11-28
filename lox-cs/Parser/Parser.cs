@@ -69,7 +69,27 @@ namespace Lox.Parser
 
         private Expr Expression()
         {
-            return Equality();
+            return Assignment();
+        }
+
+        private Expr Assignment()
+        {
+            var expr = Equality();
+
+            if (Match(TokenType.Equal))
+            {
+                var equals = Previous();
+                var value = Assignment();
+
+                if (expr is Expr.Variable variableExpr)
+                {
+                    return new Expr.Assign(variableExpr.Name, value);
+                }
+
+                _ = Error(equals, "Invalid assignment target.");
+            }
+
+            return expr;
         }
 
         private Expr Equality()

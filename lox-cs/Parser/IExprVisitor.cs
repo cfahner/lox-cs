@@ -2,6 +2,8 @@
 {
     public interface IExprVisitor<R>
     {
+        R VisitAssign(Expr.Assign expr);
+
         R VisitBinary(Expr.Binary expr);
 
         R VisitGrouping(Expr.Grouping expr);

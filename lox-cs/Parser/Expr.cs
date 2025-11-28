@@ -4,6 +4,11 @@ namespace Lox.Parser
 {
     public abstract record Expr
     {
+        public record Assign(Token Name, Expr Value) : Expr
+        {
+            public override R Accept<R>(IExprVisitor<R> visitor) => visitor.VisitAssign(this);
+        }
+
         public record Binary(Expr Left, Token Operator, Expr Right) : Expr
         {
             public override R Accept<R>(IExprVisitor<R> visitor) => visitor.VisitBinary(this);

@@ -16,6 +16,12 @@ namespace Lox.Interpreter
             }
         }
 
+        public object? VisitAssign(Expr.Assign expr)
+        {
+            var value = Evaluate(expr.Value);
+            return _environment.Assign(expr.Name, value);
+        }
+
         public object? VisitBinary(Expr.Binary expr)
         {
             var left = Evaluate(expr.Left);

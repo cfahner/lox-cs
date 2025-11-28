@@ -6,6 +6,9 @@ namespace Lox.Parser.ExprVisitors
     {
         public string Print(Expr expr) => expr.Accept(this);
 
+        public string VisitAssign(Expr.Assign expr)
+            => Parenthesize($"{expr.Name.Lexeme}=", expr.Value);
+
         public string VisitBinary(Expr.Binary binary)
             => Parenthesize(binary.Operator.Lexeme, binary.Left, binary.Right);
 
