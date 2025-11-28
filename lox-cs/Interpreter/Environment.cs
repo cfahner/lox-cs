@@ -18,5 +18,16 @@ namespace Lox.Interpreter
                 ? value
                 : throw new UndefinedVariableError(name);
         }
+
+        public object? Assign(Token name, object? value)
+        {
+            if (_values.ContainsKey(name.Lexeme))
+            {
+                _values[name.Lexeme] = value;
+                return value;
+            }
+
+            throw new UndefinedVariableError(name);
+        }
     }
 }
