@@ -4,6 +4,11 @@ namespace Lox.Parser
 {
     public abstract record Stmt
     {
+        public record Block(IEnumerable<Stmt> Statements) : Stmt
+        {
+            public override R Accept<R>(IStmtVisitor<R> visitor) => visitor.VisitBlockStmt(this);
+        }
+
         public record Expression(Expr Expr) : Stmt
         {
             public override R Accept<R>(IStmtVisitor<R> visitor) => visitor.VisitExpressionStmt(this);

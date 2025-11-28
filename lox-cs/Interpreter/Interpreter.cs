@@ -6,7 +6,7 @@ namespace Lox.Interpreter
 {
     public class Interpreter : IExprVisitor<object?>, IStmtVisitor<object?>
     {
-        private readonly Environment _environment = new();
+        private Environment _environment = new();
 
         public void Interpret(IEnumerable<Stmt> stmts)
         {
@@ -70,6 +70,12 @@ namespace Lox.Interpreter
             };
         }
 
+        public object? VisitBlockStmt(Stmt.Block stmt)
+        {
+            ExecuteBlock(stmt.Statements, new Environment(_environment));
+            return null;
+        }
+
         public object? VisitExpressionStmt(Stmt.Expression stmt)
         {
             _ = Evaluate(stmt.Expr);
@@ -95,8 +101,31 @@ namespace Lox.Interpreter
             return null;
         }
 
-        private object? Evaluate(Expr expr) => expr.Accept(this);
+        private object? Evaluate(Expr expr)
+        {
+            return expr.Accept(this);
+        }
 
-        private object? Execute(Stmt stmt) => stmt.Accept(this);
+        private object? Execute(Stmt stmt)
+        {
+            return stmt.Accept(this);
+        }
+
+        private void ExecuteBlock(IEnumerable<Stmt> statements, Environment environment)
+        {
+            var previousEnv = _environment;
+            try
+            {
+                _environment = environment;
+                foreach (var stmt in statements)
+                {
+                    _ = Execute(stmt);
+                }
+            }
+            finally
+            {
+                _environment = previousEnv;
+            }
+        }
     }
 }

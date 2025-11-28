@@ -38,6 +38,8 @@ namespace Lox.Parser
         {
             return Match(TokenType.Print)
                 ? PrintStatement()
+                : Match(TokenType.LeftBrace)
+                ? new Stmt.Block(Block())
                 : ExpressionStatement();
         }
 
@@ -65,6 +67,15 @@ namespace Lox.Parser
             var expr = Expression();
             _ = Consume(TokenType.Semicolon, "Expecting ';' after expression.");
             return new Stmt.Expression(expr);
+        }
+
+        private IEnumerable<Stmt> Block()
+        {
+            while (!Check(TokenType.RightBrace) && !IsAtEnd)
+            {
+                yield return Declaration();
+            }
+            _ = Consume(TokenType.RightBrace, "Expecting '}' after block.");
         }
 
         private Expr Expression()
@@ -184,7 +195,6 @@ namespace Lox.Parser
 
         private Token Consume(TokenType type, string message)
         {
-            DiscardNonCode();
             return Check(type) ? Advance() : throw Error(Peek(), message);
         }
 
@@ -199,6 +209,7 @@ namespace Lox.Parser
 
         private bool Check(TokenType tokenType)
         {
+            DiscardNonCode();
             return !IsAtEnd && Peek().Type == tokenType;
         }
 
