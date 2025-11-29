@@ -53,6 +53,28 @@ namespace Lox.Interpreter
             return expr.Value;
         }
 
+        public object? VisitLogical(Expr.Logical expr)
+        {
+            var left = Evaluate(expr.Left);
+
+            if (expr.Operator.Type is TokenType.Or)
+            {
+                if (Conversions.ToTruthy(left))
+                {
+                    return left;
+                }
+            }
+            else
+            {
+                if (!Conversions.ToTruthy(left))
+                {
+                    return left;
+                }
+            }
+
+            return Evaluate(expr.Right);
+        }
+
         public object? VisitVariable(Expr.Variable expr)
         {
             return _environment.Get(expr.Name);

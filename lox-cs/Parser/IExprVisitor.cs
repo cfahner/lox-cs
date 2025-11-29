@@ -10,8 +10,10 @@
 
         R VisitLiteral(Expr.Literal expr);
 
-        R VisitVariable(Expr.Variable expr);
+        R VisitLogical(Expr.Logical expr);
 
         R VisitUnary(Expr.Unary expr);
+
+        R VisitVariable(Expr.Variable expr);
     }
 }

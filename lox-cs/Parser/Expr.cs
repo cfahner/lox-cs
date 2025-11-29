@@ -24,14 +24,19 @@ namespace Lox.Parser
             public override R Accept<R>(IExprVisitor<R> visitor) => visitor.VisitLiteral(this);
         }
 
-        public record Variable(Token Name) : Expr
+        public record Logical(Expr Left, Token Operator, Expr Right) : Expr
         {
-            public override R Accept<R>(IExprVisitor<R> visitor) => visitor.VisitVariable(this);
+            public override R Accept<R>(IExprVisitor<R> visitor) => visitor.VisitLogical(this);
         }
 
         public record Unary(Token Operator, Expr Right) : Expr
         {
             public override R Accept<R>(IExprVisitor<R> visitor) => visitor.VisitUnary(this);
+        }
+
+        public record Variable(Token Name) : Expr
+        {
+            public override R Accept<R>(IExprVisitor<R> visitor) => visitor.VisitVariable(this);
         }
 
         public abstract R Accept<R>(IExprVisitor<R> visitor);
