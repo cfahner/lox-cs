@@ -36,11 +36,27 @@ namespace Lox.Parser
 
         private Stmt Statement()
         {
-            return Match(TokenType.Print)
+            return Match(TokenType.If)
+                ? IfStatement()
+                : Match(TokenType.Print)
                 ? PrintStatement()
                 : Match(TokenType.LeftBrace)
                 ? new Stmt.Block(Block())
                 : ExpressionStatement();
+        }
+
+        private Stmt.If IfStatement()
+        {
+            _ = Consume(TokenType.LeftParenthesis, "Expected '(' after 'if'.");
+            var condition = Expression();
+            _ = Consume(TokenType.RightParenthesis, "Expected ')' after if-condition.");
+
+            var thenBranch = Statement();
+            var elseBranch = Match(TokenType.Else)
+                ? Statement()
+                : null;
+
+            return new Stmt.If(condition, thenBranch, elseBranch);
         }
 
         private Stmt.Print PrintStatement()

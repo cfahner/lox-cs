@@ -6,6 +6,8 @@
 
         R VisitExpressionStmt(Stmt.Expression stmt);
 
+        R VisitIfStmt(Stmt.If stmt);
+
         R VisitPrintStmt(Stmt.Print stmt);
 
         R VisitVarStmt(Stmt.Var stmt);

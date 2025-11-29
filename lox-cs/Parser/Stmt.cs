@@ -14,6 +14,11 @@ namespace Lox.Parser
             public override R Accept<R>(IStmtVisitor<R> visitor) => visitor.VisitExpressionStmt(this);
         }
 
+        public record If(Expr Condition, Stmt Then, Stmt? Else) : Stmt
+        {
+            public override R Accept<R>(IStmtVisitor<R> visitor) => visitor.VisitIfStmt(this);
+        }
+
         public record Print(Expr Expr) : Stmt
         {
             public override R Accept<R>(IStmtVisitor<R> visitor) => visitor.VisitPrintStmt(this);

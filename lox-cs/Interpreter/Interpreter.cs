@@ -82,6 +82,19 @@ namespace Lox.Interpreter
             return null;
         }
 
+        public object? VisitIfStmt(Stmt.If stmt)
+        {
+            if (Conversions.ToTruthy(Evaluate(stmt.Condition)))
+            {
+                _ = Execute(stmt.Then);
+            }
+            else if (stmt.Else is not null)
+            {
+                _ = Execute(stmt.Else);
+            }
+            return null;
+        }
+
         public object? VisitPrintStmt(Stmt.Print stmt)
         {
             var value = Evaluate(stmt.Expr);
