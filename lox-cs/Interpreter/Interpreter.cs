@@ -136,6 +136,15 @@ namespace Lox.Interpreter
             return null;
         }
 
+        public object? VisitWhileStmt(Stmt.While stmt)
+        {
+            while (Conversions.ToTruthy(Evaluate(stmt.Condition)))
+            {
+                _ = Execute(stmt.Body);
+            }
+            return null;
+        }
+
         private object? Evaluate(Expr expr)
         {
             return expr.Accept(this);

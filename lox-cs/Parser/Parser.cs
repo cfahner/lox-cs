@@ -40,6 +40,8 @@ namespace Lox.Parser
                 ? IfStatement()
                 : Match(TokenType.Print)
                 ? PrintStatement()
+                : Match(TokenType.While)
+                ? WhileStatement()
                 : Match(TokenType.LeftBrace)
                 ? new Stmt.Block(Block())
                 : ExpressionStatement();
@@ -76,6 +78,16 @@ namespace Lox.Parser
 
             _ = Consume(TokenType.Semicolon, "Expected ';' after variable declaration.");
             return new Stmt.Var(name, initializer);
+        }
+
+        private Stmt.While WhileStatement()
+        {
+            _ = Consume(TokenType.LeftParenthesis, "Expected '(' after 'while'.");
+            var condition = Expression();
+            _ = Consume(TokenType.RightParenthesis, "Expected ')' after while-condition.");
+            var body = Statement();
+
+            return new Stmt.While(condition, body);
         }
 
         private Stmt.Expression ExpressionStatement()
