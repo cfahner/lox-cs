@@ -94,7 +94,6 @@ internal class Program
         foreach (var error in errors)
         {
             Report(error.Token, error.Message);
-            return;
         }
     }
 
