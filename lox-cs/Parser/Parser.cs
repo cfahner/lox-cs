@@ -4,6 +4,10 @@ namespace Lox.Parser
 {
     public class Parser(Token[] tokens)
     {
+        public record Result(IEnumerable<Stmt> Statements, IEnumerable<ParseError> Errors)
+        {
+        }
+
         private readonly List<ParseError> _accumulatedErrors = [];
         public IEnumerable<ParseError> AccumulatedErrors => _accumulatedErrors;
 
@@ -11,12 +15,20 @@ namespace Lox.Parser
 
         private int _current = 0;
 
-        public IEnumerable<Stmt> Parse()
+        public Result Parse()
         {
+            List<Stmt> stmts = [];
+            try
+            {
             while (!IsAtEnd)
             {
-                yield return Declaration();
+                    stmts.Add(Declaration());
             }
+        }
+            catch (ParseError)
+            {
+            }
+            return new Result(stmts, _accumulatedErrors);
         }
 
         private Stmt Declaration()
@@ -99,11 +111,13 @@ namespace Lox.Parser
 
         private IEnumerable<Stmt> Block()
         {
+            List<Stmt> stmts = [];
             while (!Check(TokenType.RightBrace) && !IsAtEnd)
             {
-                yield return Declaration();
+                stmts.Add(Declaration());
             }
             _ = Consume(TokenType.RightBrace, "Expecting '}' after block.");
+            return stmts;
         }
 
         private Expr Expression()
