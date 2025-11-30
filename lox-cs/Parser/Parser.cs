@@ -9,7 +9,6 @@ namespace Lox.Parser
         }
 
         private readonly List<ParseError> _accumulatedErrors = [];
-        public IEnumerable<ParseError> AccumulatedErrors => _accumulatedErrors;
 
         private bool IsAtEnd => Peek().Type == TokenType.Eof;
 
@@ -20,11 +19,11 @@ namespace Lox.Parser
             List<Stmt> stmts = [];
             try
             {
-            while (!IsAtEnd)
-            {
+                while (!IsAtEnd)
+                {
                     stmts.Add(Declaration());
+                }
             }
-        }
             catch (ParseError)
             {
             }
@@ -48,7 +47,9 @@ namespace Lox.Parser
 
         private Stmt Statement()
         {
-            return Match(TokenType.If)
+            return Match(TokenType.For)
+                ? ForStatement()
+                : Match(TokenType.If)
                 ? IfStatement()
                 : Match(TokenType.Print)
                 ? PrintStatement()
@@ -57,6 +58,40 @@ namespace Lox.Parser
                 : Match(TokenType.LeftBrace)
                 ? new Stmt.Block(Block())
                 : ExpressionStatement();
+        }
+
+        private Stmt ForStatement()
+        {
+            _ = Consume(TokenType.LeftParenthesis, "Expected '(' after 'for'.");
+
+            Stmt? initializer = Match(TokenType.Semicolon)
+                ? null
+                : Match(TokenType.Var)
+                ? VarDeclaration()
+                : ExpressionStatement();
+
+            var condition = !Check(TokenType.Semicolon)
+                ? Expression()
+                : null;
+            _ = Consume(TokenType.Semicolon, "Expected ';' after for-condition.");
+
+            var increment = !Check(TokenType.RightParenthesis)
+                ? Expression()
+                : null;
+            _ = Consume(TokenType.RightParenthesis, "Expected ')' after for-increment.");
+
+            var body = Statement();
+
+            if (increment is not null)
+            {
+                body = new Stmt.Block([body, new Stmt.Expression(increment)]);
+            }
+            body = new Stmt.While(condition ?? new Expr.Literal(true), body);
+            if (initializer is not null)
+            {
+                body = new Stmt.Block([initializer, body]);
+            }
+            return body;
         }
 
         private Stmt.If IfStatement()
