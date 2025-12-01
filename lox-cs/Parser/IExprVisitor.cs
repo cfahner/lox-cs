@@ -6,6 +6,8 @@
 
         R VisitBinary(Expr.Binary expr);
 
+        R VisitCall(Expr.Call expr);
+
         R VisitGrouping(Expr.Grouping expr);
 
         R VisitLiteral(Expr.Literal expr);

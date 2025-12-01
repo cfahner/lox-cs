@@ -12,6 +12,9 @@ namespace Lox.Parser.ExprVisitors
         public string VisitBinary(Expr.Binary binary)
             => Parenthesize(binary.Operator.Lexeme, binary.Left, binary.Right);
 
+        public string VisitCall(Expr.Call expr)
+            => Parenthesize(expr.Parenthesis.Lexeme, [.. expr.Arguments]);
+
         public string VisitGrouping(Expr.Grouping grouping)
             => Parenthesize("group", grouping.Expression);
 

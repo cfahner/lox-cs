@@ -14,6 +14,11 @@ namespace Lox.Parser
             public override R Accept<R>(IExprVisitor<R> visitor) => visitor.VisitBinary(this);
         }
 
+        public record Call(Expr Callee, Token Parenthesis, IEnumerable<Expr> Arguments) : Expr
+        {
+            public override R Accept<R>(IExprVisitor<R> visitor) => visitor.VisitCall(this);
+        }
+
         public record Grouping(Expr Expression) : Expr
         {
             public override R Accept<R>(IExprVisitor<R> visitor) => visitor.VisitGrouping(this);

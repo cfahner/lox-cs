@@ -250,7 +250,49 @@ namespace Lox.Parser
 
         private Expr Unary()
         {
-            return Match(TokenType.Bang, TokenType.Minus) ? new Expr.Unary(Previous(), Unary()) : Primary();
+            return Match(TokenType.Bang, TokenType.Minus)
+                ? new Expr.Unary(Previous(), Unary())
+                : Call();
+        }
+
+        private Expr.Call FinishCall(Expr callee)
+        {
+            List<Expr> arguments = [];
+            if (!Check(TokenType.RightParenthesis))
+            {
+                do
+                {
+                    if (arguments.Count >= 255)
+                    {
+                        _ = Error(Peek(), "Can't have more than 255 arguments.");
+                    }
+                    arguments.Add(Expression());
+                }
+                while (Match(TokenType.Comma));
+            }
+
+            var parenthesis = Consume(TokenType.RightParenthesis, "Expected ')' after argument list.");
+
+            return new Expr.Call(callee, parenthesis, arguments);
+        }
+
+        private Expr Call()
+        {
+            var expr = Primary();
+
+            while (true)
+            {
+                if (Match(TokenType.LeftParenthesis))
+                {
+                    expr = FinishCall(expr);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return expr;
         }
 
         private Expr Primary()
