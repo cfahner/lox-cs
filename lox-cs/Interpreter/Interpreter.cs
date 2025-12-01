@@ -1,4 +1,4 @@
-﻿using Lox.Interpreter.Natives;
+﻿using Lox.Interpreter.NativeCallables;
 using Lox.Interpreter.Operations;
 using Lox.Interpreter.RuntimeErrors;
 using Lox.Parser;
