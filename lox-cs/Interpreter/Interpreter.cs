@@ -1,4 +1,6 @@
-﻿using Lox.Interpreter.Operations;
+﻿using Lox.Interpreter.Natives;
+using Lox.Interpreter.Operations;
+using Lox.Interpreter.RuntimeErrors;
 using Lox.Parser;
 using Lox.Scanner;
 
@@ -6,7 +8,15 @@ namespace Lox.Interpreter
 {
     public class Interpreter : IExprVisitor<object?>, IStmtVisitor<object?>
     {
-        private Environment _environment = new();
+        private readonly Environment _globals = new();
+
+        private Environment _environment;
+
+        public Interpreter()
+        {
+            _environment = _globals;
+            _globals.Define("clock", new Clock());
+        }
 
         public void Interpret(IEnumerable<Stmt> stmts)
         {
