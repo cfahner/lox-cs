@@ -1,5 +1,4 @@
-﻿
-namespace Lox.Interpreter.Natives
+﻿namespace Lox.Interpreter.NativeCallables
 {
     internal class Clock : NativeLoxCallable
     {

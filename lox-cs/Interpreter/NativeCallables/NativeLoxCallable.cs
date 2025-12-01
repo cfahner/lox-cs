@@ -1,4 +1,4 @@
-﻿namespace Lox.Interpreter.Natives
+﻿namespace Lox.Interpreter.NativeCallables
 {
     internal abstract class NativeLoxCallable : ILoxCallable
     {
