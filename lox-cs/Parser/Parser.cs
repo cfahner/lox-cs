@@ -144,7 +144,7 @@ namespace Lox.Parser
             return new Stmt.Expression(expr);
         }
 
-        private IEnumerable<Stmt> Block()
+        private List<Stmt> Block()
         {
             List<Stmt> stmts = [];
             while (!Check(TokenType.RightBrace) && !IsAtEnd)
