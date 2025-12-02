@@ -15,6 +15,7 @@
             {
                 null => "nil",
                 double doubleValue => $"{doubleValue}",
+                bool boolValue => boolValue ? "true" : "false",
                 _ => value.ToString()
             } ?? string.Empty;
         }
