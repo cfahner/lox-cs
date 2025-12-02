@@ -172,17 +172,7 @@ namespace Lox.Interpreter
             return null;
         }
 
-        private object? Evaluate(Expr expr)
-        {
-            return expr.Accept(this);
-        }
-
-        private object? Execute(Stmt stmt)
-        {
-            return stmt.Accept(this);
-        }
-
-        private void ExecuteBlock(IEnumerable<Stmt> statements, Environment environment)
+        public void ExecuteBlock(IEnumerable<Stmt> statements, Environment environment)
         {
             var previousEnv = _environment;
             try
@@ -197,6 +187,16 @@ namespace Lox.Interpreter
             {
                 _environment = previousEnv;
             }
+        }
+
+        private object? Evaluate(Expr expr)
+        {
+            return expr.Accept(this);
+        }
+
+        private object? Execute(Stmt stmt)
+        {
+            return stmt.Accept(this);
         }
     }
 }
