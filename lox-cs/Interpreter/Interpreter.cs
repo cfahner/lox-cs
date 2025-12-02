@@ -57,15 +57,11 @@ namespace Lox.Interpreter
         {
             var callee = Evaluate(expr.Callee);
 
-            List<object?> arguments = [];
-            foreach (var argument in expr.Arguments)
-            {
-                arguments.Add(Evaluate(argument));
-            }
+            var arguments = expr.Arguments.Select(Evaluate).ToArray();
 
             return callee is ILoxCallable callable
-                ? arguments.Count != callable.Arity
-                    ? throw new ArgumentCountError(expr.Parenthesis, arguments.Count, callable.Arity)
+                ? arguments.Length != callable.Arity
+                    ? throw new ArgumentCountError(expr.Parenthesis, arguments.Length, callable.Arity)
                     : callable.Call(this, arguments)
                 : throw new TypeError(expr.Parenthesis, "Callee is not callable.");
         }
