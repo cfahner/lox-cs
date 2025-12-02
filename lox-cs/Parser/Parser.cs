@@ -8,6 +8,8 @@ namespace Lox.Parser
         {
         }
 
+        public const int ParameterLimit = 255;
+
         private readonly List<ParseError> _accumulatedErrors = [];
 
         private bool IsAtEnd => Peek().Type == TokenType.Eof;
@@ -34,7 +36,9 @@ namespace Lox.Parser
         {
             try
             {
-                return Match(TokenType.Var)
+                return Match(TokenType.Fun)
+                    ? Function("function")
+                    : Match(TokenType.Var)
                     ? VarDeclaration()
                     : Statement();
             }
@@ -142,6 +146,29 @@ namespace Lox.Parser
             var expr = Expression();
             _ = Consume(TokenType.Semicolon, "Expecting ';' after expression.");
             return new Stmt.Expression(expr);
+        }
+
+        private Stmt.Function Function(string kind)
+        {
+            var name = Consume(TokenType.Identifier, $"Expected {kind} name after 'fun'.");
+            _ = Consume(TokenType.LeftParenthesis, $"Expected '(' after {kind} name.");
+            var parameters = new List<Token>();
+            if (!Check(TokenType.RightParenthesis))
+            {
+                do
+                {
+                    if (parameters.Count >= ParameterLimit)
+                    {
+                        _ = Error(Peek(), $"Can't have more than {ParameterLimit} parameters.");
+                    }
+                    parameters.Add(Consume(TokenType.Identifier, "Expected a parameter name."));
+                }
+                while (Match(TokenType.Comma));
+            }
+            _ = Consume(TokenType.RightParenthesis, "Expected ')' after parameter list.");
+            _ = Consume(TokenType.LeftBrace, "Expected '{' before " + kind + " body.");
+            var body = Block();
+            return new Stmt.Function(name, [.. parameters], body);
         }
 
         private List<Stmt> Block()

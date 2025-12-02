@@ -14,6 +14,11 @@ namespace Lox.Parser
             public override R Accept<R>(IStmtVisitor<R> visitor) => visitor.VisitExpressionStmt(this);
         }
 
+        public record Function(Token Name, Token[] Parameters, IEnumerable<Stmt> Body) : Stmt
+        {
+            public override R Accept<R>(IStmtVisitor<R> visitor) => visitor.VisitFunctionStmt(this);
+        }
+
         public record If(Expr Condition, Stmt Then, Stmt? Else) : Stmt
         {
             public override R Accept<R>(IStmtVisitor<R> visitor) => visitor.VisitIfStmt(this);

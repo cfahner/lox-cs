@@ -127,6 +127,13 @@ namespace Lox.Interpreter
             return null;
         }
 
+        public object? VisitFunctionStmt(Stmt.Function stmt)
+        {
+            var function = new LoxFunction(stmt);
+            _environment.Define(stmt.Name.Lexeme, function);
+            return null;
+        }
+
         public object? VisitIfStmt(Stmt.If stmt)
         {
             if (Conversions.ToTruthy(Evaluate(stmt.Condition)))
