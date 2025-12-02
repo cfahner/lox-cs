@@ -8,14 +8,14 @@ namespace Lox.Interpreter
 {
     public class Interpreter : IExprVisitor<object?>, IStmtVisitor<object?>
     {
-        private readonly Environment _globals = new();
+        public Environment Globals { get; private init; } = new();
 
         private Environment _environment;
 
         public Interpreter()
         {
-            _environment = _globals;
-            _globals.Define("clock", new Clock());
+            _environment = Globals;
+            Globals.Define("clock", new Clock());
         }
 
         public void Interpret(IEnumerable<Stmt> stmts)
