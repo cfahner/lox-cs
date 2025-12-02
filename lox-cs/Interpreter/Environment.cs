@@ -3,7 +3,7 @@ using Lox.Scanner;
 
 namespace Lox.Interpreter
 {
-    internal class Environment
+    public class Environment
     {
         private readonly Dictionary<string, object?> _values = [];
 
