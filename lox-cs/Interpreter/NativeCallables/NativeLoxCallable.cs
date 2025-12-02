@@ -4,7 +4,7 @@
     {
         public abstract int Arity { get; }
 
-        public abstract object? Call(Interpreter interpreter, IEnumerable<object?> arguments);
+        public abstract object? Call(Interpreter interpreter, object?[] arguments);
 
         public sealed override string ToString() => "<native fn>";
     }

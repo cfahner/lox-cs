@@ -4,6 +4,6 @@
     {
         int Arity { get; }
 
-        object? Call(Interpreter interpreter, IEnumerable<object?> arguments);
+        object? Call(Interpreter interpreter, object?[] arguments);
     }
 }
