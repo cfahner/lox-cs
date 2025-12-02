@@ -289,9 +289,9 @@ namespace Lox.Parser
             {
                 do
                 {
-                    if (arguments.Count >= 255)
+                    if (arguments.Count >= ParameterLimit)
                     {
-                        _ = Error(Peek(), "Can't have more than 255 arguments.");
+                        _ = Error(Peek(), $"Can't have more than {ParameterLimit} arguments.");
                     }
                     arguments.Add(Expression());
                 }
