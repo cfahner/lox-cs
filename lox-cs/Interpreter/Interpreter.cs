@@ -154,6 +154,11 @@ namespace Lox.Interpreter
             return null;
         }
 
+        public object? VisitReturnStmt(Stmt.Return stmt)
+        {
+            throw new Return(stmt.Value is not null ? Evaluate(stmt.Value) : null);
+        }
+
         public object? VisitVarStmt(Stmt.Var stmt)
         {
             object? value = null;

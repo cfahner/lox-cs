@@ -57,6 +57,8 @@ namespace Lox.Parser
                 ? IfStatement()
                 : Match(TokenType.Print)
                 ? PrintStatement()
+                : Match(TokenType.Return)
+                ? ReturnStatement()
                 : Match(TokenType.While)
                 ? WhileStatement()
                 : Match(TokenType.LeftBrace)
@@ -117,6 +119,17 @@ namespace Lox.Parser
             var value = Expression();
             _ = Consume(TokenType.Semicolon, "Expected ';' after print value.");
             return new Stmt.Print(value);
+        }
+
+        private Stmt.Return ReturnStatement()
+        {
+            var keyword = Previous();
+            var value = !Check(TokenType.Semicolon)
+                ? Expression()
+                : null;
+
+            _ = Consume(TokenType.Semicolon, "Expected ';' after return value.");
+            return new Stmt.Return(keyword, value);
         }
 
         private Stmt.Var VarDeclaration()

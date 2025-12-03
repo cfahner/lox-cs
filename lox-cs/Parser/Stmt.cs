@@ -29,6 +29,11 @@ namespace Lox.Parser
             public override R Accept<R>(IStmtVisitor<R> visitor) => visitor.VisitPrintStmt(this);
         }
 
+        public record Return(Token Keyword, Expr? Value) : Stmt
+        {
+            public override R Accept<R>(IStmtVisitor<R> visitor) => visitor.VisitReturnStmt(this);
+        }
+
         public record While(Expr Condition, Stmt Body) : Stmt
         {
             public override R Accept<R>(IStmtVisitor<R> visitor) => visitor.VisitWhileStmt(this);

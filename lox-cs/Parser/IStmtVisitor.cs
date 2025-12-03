@@ -12,6 +12,8 @@
 
         R VisitPrintStmt(Stmt.Print stmt);
 
+        R VisitReturnStmt(Stmt.Return stmt);
+
         R VisitWhileStmt(Stmt.While stmt);
 
         R VisitVarStmt(Stmt.Var stmt);
