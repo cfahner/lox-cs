@@ -8,14 +8,17 @@ namespace Lox.Interpreter
 
         private readonly Stmt.Function _declaration;
 
-        public LoxFunction(Stmt.Function declaration)
+        private readonly Environment _closure;
+
+        public LoxFunction(Stmt.Function declaration, Environment closure)
         {
             _declaration = declaration;
+            _closure = closure;
         }
 
         public object? Call(Interpreter interpreter, object?[] arguments)
         {
-            var environment = new Environment(interpreter.Globals);
+            var environment = new Environment(_closure);
             for (var i = 0; i < _declaration.Parameters.Length; i += 1)
             {
                 environment.Define(_declaration.Parameters[i].Lexeme, arguments[i]);
