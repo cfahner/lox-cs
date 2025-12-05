@@ -10,6 +10,8 @@ namespace Lox.Interpreter
     {
         public Environment Globals { get; private init; } = new();
 
+        private readonly Dictionary<Expr, int> _locals = [];
+
         private Environment _environment;
 
         public Interpreter()
@@ -26,10 +28,25 @@ namespace Lox.Interpreter
             }
         }
 
+        public void Resolve(Expr expr, int depth)
+        {
+            _locals.Add(expr, depth);
+        }
+
         public object? VisitAssign(Expr.Assign expr)
         {
             var value = Evaluate(expr.Value);
-            return _environment.Assign(expr.Name, value);
+
+            if (_locals.TryGetValue(expr, out var distance))
+            {
+                _environment.AssignAt(distance, expr.Name, value);
+            }
+            else
+            {
+                _ = Globals.Assign(expr.Name, value);
+            }
+
+            return value;
         }
 
         public object? VisitBinary(Expr.Binary expr)
@@ -100,7 +117,7 @@ namespace Lox.Interpreter
 
         public object? VisitVariable(Expr.Variable expr)
         {
-            return _environment.Get(expr.Name);
+            return LookupVariable(expr.Name, expr);
         }
 
         public object? VisitUnary(Expr.Unary expr)
@@ -205,6 +222,13 @@ namespace Lox.Interpreter
         private object? Execute(Stmt stmt)
         {
             return stmt.Accept(this);
+        }
+
+        private object? LookupVariable(Token name, Expr expr)
+        {
+            return _locals.TryGetValue(expr, out var distance)
+                ? _environment.GetAt(distance, name.Lexeme)
+                : Globals.Get(name);
         }
     }
 }

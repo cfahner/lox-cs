@@ -70,6 +70,8 @@ internal class Program
             }
             else
             {
+                var resolver = new Resolver(_interpreter);
+                resolver.Resolve(parseResult.Statements);
                 _interpreter.Interpret(parseResult.Statements);
             }
         }
@@ -80,6 +82,10 @@ internal class Program
         catch (RuntimeError runTimeError)
         {
             Report(runTimeError);
+        }
+        catch (ResolutionError resolutionError)
+        {
+            Report(resolutionError);
         }
     }
 
@@ -95,6 +101,11 @@ internal class Program
     {
         Console.Error.WriteLine($"{runTimeError.Message}\n[line {runTimeError.Token.Line}]");
         _hadRuntimeError = true;
+    }
+
+    private static void Report(ResolutionError resolutionError)
+    {
+        Report(resolutionError.Token, resolutionError.Message);
     }
 
     private static void Report(Token token, string message)

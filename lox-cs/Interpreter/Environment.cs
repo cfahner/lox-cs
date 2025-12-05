@@ -24,6 +24,30 @@ namespace Lox.Interpreter
             _values[name] = value;
         }
 
+        public Environment Ancestor(int distance)
+        {
+            var environment = this;
+            for (var i = 0; i < distance; i += 1)
+            {
+                environment = environment?._enclosing;
+            }
+            return environment is null
+                ? throw new Exception($"No environment found at distance {distance}.")
+                : environment;
+        }
+
+        public object? GetAt(int distance, string name)
+        {
+            return Ancestor(distance)._values.TryGetValue(name, out var value)
+                ? value
+                : null;
+        }
+
+        public void AssignAt(int distance, Token name, object? value)
+        {
+            Ancestor(distance)._values.Add(name.Lexeme, value);
+        }
+
         public object? Get(Token name)
         {
             return _values.TryGetValue(name.Lexeme, out var value)
