@@ -8,7 +8,7 @@ namespace Lox.Interpreter
 {
     public class Interpreter : IExprVisitor<object?>, IStmtVisitor<object?>
     {
-        public Environment Globals { get; private init; } = new();
+        private readonly Environment _globals = new();
 
         private readonly Dictionary<Expr, int> _locals = [];
 
@@ -16,8 +16,8 @@ namespace Lox.Interpreter
 
         public Interpreter()
         {
-            _environment = Globals;
-            Globals.Define("clock", new Clock());
+            _environment = _globals;
+            _globals.Define("clock", new Clock());
         }
 
         public void Interpret(IEnumerable<Stmt> stmts)
@@ -43,7 +43,7 @@ namespace Lox.Interpreter
             }
             else
             {
-                _ = Globals.Assign(expr.Name, value);
+                _ = _globals.Assign(expr.Name, value);
             }
 
             return value;
@@ -228,7 +228,7 @@ namespace Lox.Interpreter
         {
             return _locals.TryGetValue(expr, out var distance)
                 ? _environment.GetAt(distance, name.Lexeme)
-                : Globals.Get(name);
+                : _globals.Get(name);
         }
     }
 }
