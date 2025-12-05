@@ -33,7 +33,7 @@ namespace Lox.Interpreter
             _locals.Add(expr, depth);
         }
 
-        public object? VisitAssign(Expr.Assign expr)
+        public object? VisitAssignExpr(Expr.Assign expr)
         {
             var value = Evaluate(expr.Value);
 
@@ -49,7 +49,7 @@ namespace Lox.Interpreter
             return value;
         }
 
-        public object? VisitBinary(Expr.Binary expr)
+        public object? VisitBinaryExpr(Expr.Binary expr)
         {
             var left = Evaluate(expr.Left);
             var right = Evaluate(expr.Right);
@@ -70,7 +70,7 @@ namespace Lox.Interpreter
             };
         }
 
-        public object? VisitCall(Expr.Call expr)
+        public object? VisitCallExpr(Expr.Call expr)
         {
             var callee = Evaluate(expr.Callee);
 
@@ -83,17 +83,17 @@ namespace Lox.Interpreter
                 : throw new TypeError(expr.Parenthesis, "Callee is not callable.");
         }
 
-        public object? VisitGrouping(Expr.Grouping expr)
+        public object? VisitGroupingExpr(Expr.Grouping expr)
         {
             return Evaluate(expr.Expression);
         }
 
-        public object? VisitLiteral(Expr.Literal expr)
+        public object? VisitLiteralExpr(Expr.Literal expr)
         {
             return expr.Value;
         }
 
-        public object? VisitLogical(Expr.Logical expr)
+        public object? VisitLogicalExpr(Expr.Logical expr)
         {
             var left = Evaluate(expr.Left);
 
@@ -115,12 +115,12 @@ namespace Lox.Interpreter
             return Evaluate(expr.Right);
         }
 
-        public object? VisitVariable(Expr.Variable expr)
+        public object? VisitVariableExpr(Expr.Variable expr)
         {
             return LookupVariable(expr.Name, expr);
         }
 
-        public object? VisitUnary(Expr.Unary expr)
+        public object? VisitUnaryExpr(Expr.Unary expr)
         {
             var right = Evaluate(expr.Right);
 

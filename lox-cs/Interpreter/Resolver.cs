@@ -99,7 +99,7 @@ namespace Lox.Interpreter
             return null;
         }
 
-        public object? VisitVariable(Expr.Variable expr)
+        public object? VisitVariableExpr(Expr.Variable expr)
         {
             if (_scopes.TryPeek(out var scope)
                 && scope.TryGetValue(expr.Name.Lexeme, out var defined)
@@ -112,21 +112,21 @@ namespace Lox.Interpreter
             return null;
         }
 
-        public object? VisitAssign(Expr.Assign expr)
+        public object? VisitAssignExpr(Expr.Assign expr)
         {
             Resolve(expr.Value);
             ResolveLocal(expr, expr.Name);
             return null;
         }
 
-        public object? VisitBinary(Expr.Binary expr)
+        public object? VisitBinaryExpr(Expr.Binary expr)
         {
             Resolve(expr.Left);
             Resolve(expr.Right);
             return null;
         }
 
-        public object? VisitCall(Expr.Call expr)
+        public object? VisitCallExpr(Expr.Call expr)
         {
             Resolve(expr.Callee);
             foreach (var arg in expr.Arguments)
@@ -136,25 +136,25 @@ namespace Lox.Interpreter
             return null;
         }
 
-        public object? VisitGrouping(Expr.Grouping expr)
+        public object? VisitGroupingExpr(Expr.Grouping expr)
         {
             Resolve(expr.Expression);
             return null;
         }
 
-        public object? VisitLiteral(Expr.Literal expr)
+        public object? VisitLiteralExpr(Expr.Literal expr)
         {
             return null;
         }
 
-        public object? VisitLogical(Expr.Logical expr)
+        public object? VisitLogicalExpr(Expr.Logical expr)
         {
             Resolve(expr.Left);
             Resolve(expr.Right);
             return null;
         }
 
-        public object? VisitUnary(Expr.Unary expr)
+        public object? VisitUnaryExpr(Expr.Unary expr)
         {
             Resolve(expr.Right);
             return null;

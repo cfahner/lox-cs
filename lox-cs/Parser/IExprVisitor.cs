@@ -2,20 +2,20 @@
 {
     public interface IExprVisitor<R>
     {
-        R VisitAssign(Expr.Assign expr);
+        R VisitAssignExpr(Expr.Assign expr);
 
-        R VisitBinary(Expr.Binary expr);
+        R VisitBinaryExpr(Expr.Binary expr);
 
-        R VisitCall(Expr.Call expr);
+        R VisitCallExpr(Expr.Call expr);
 
-        R VisitGrouping(Expr.Grouping expr);
+        R VisitGroupingExpr(Expr.Grouping expr);
 
-        R VisitLiteral(Expr.Literal expr);
+        R VisitLiteralExpr(Expr.Literal expr);
 
-        R VisitLogical(Expr.Logical expr);
+        R VisitLogicalExpr(Expr.Logical expr);
 
-        R VisitUnary(Expr.Unary expr);
+        R VisitUnaryExpr(Expr.Unary expr);
 
-        R VisitVariable(Expr.Variable expr);
+        R VisitVariableExpr(Expr.Variable expr);
     }
 }
