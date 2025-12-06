@@ -84,6 +84,14 @@ namespace Lox.Interpreter
                 : throw new TypeError(expr.Parenthesis, "Callee is not callable.");
         }
 
+        public object? VisitGetExpr(Expr.Get expr)
+        {
+            var @object = Evaluate(expr.Object);
+            return @object is LoxInstance loxInstance
+                ? loxInstance.Get(expr.Name)
+                : throw new RuntimeError(expr.Name, "Only class instances have properties.");
+        }
+
         public object? VisitGroupingExpr(Expr.Grouping expr)
         {
             return Evaluate(expr.Expression);
@@ -143,7 +151,7 @@ namespace Lox.Interpreter
         {
             _environment.Define(stmt.Name.Lexeme, null);
             var @class = new LoxClass(stmt.Name.Lexeme);
-            _environment.Assign(stmt.Name, @class);
+            _ = _environment.Assign(stmt.Name, @class);
             return null;
         }
 

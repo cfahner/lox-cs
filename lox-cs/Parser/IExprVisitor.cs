@@ -8,6 +8,8 @@
 
         R VisitCallExpr(Expr.Call expr);
 
+        R VisitGetExpr(Expr.Get expr);
+
         R VisitGroupingExpr(Expr.Grouping expr);
 
         R VisitLiteralExpr(Expr.Literal expr);

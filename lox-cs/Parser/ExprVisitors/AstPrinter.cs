@@ -15,6 +15,9 @@ namespace Lox.Parser.ExprVisitors
         public string VisitCallExpr(Expr.Call expr)
             => Parenthesize(expr.Parenthesis.Lexeme, [.. expr.Arguments]);
 
+        public string VisitGetExpr(Expr.Get expr)
+            => Parenthesize($"get.{expr.Name.Lexeme}", expr.Object);
+
         public string VisitGroupingExpr(Expr.Grouping grouping)
             => Parenthesize("group", grouping.Expression);
 

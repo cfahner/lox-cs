@@ -143,6 +143,12 @@ namespace Lox.Interpreter
             return null;
         }
 
+        public object? VisitGetExpr(Expr.Get expr)
+        {
+            Resolve(expr.Object);
+            return null;
+        }
+
         public object? VisitGroupingExpr(Expr.Grouping expr)
         {
             Resolve(expr.Expression);
