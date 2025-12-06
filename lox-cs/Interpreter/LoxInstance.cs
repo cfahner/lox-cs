@@ -1,9 +1,20 @@
-﻿namespace Lox.Interpreter
+﻿using Lox.Scanner;
+
+namespace Lox.Interpreter
 {
     internal class LoxInstance(LoxClass @class)
     {
-        private readonly LoxClass _class = @class;
+        public LoxClass Class { get; private init; } = @class;
 
-        public override string ToString() => $"<instance of {_class.Name}>";
+        private readonly Dictionary<string, object?> _fields = [];
+
+        public override string ToString() => $"<instance of {Class.Name}>";
+
+        public object? Get(Token name)
+        {
+            return _fields.TryGetValue(name.Lexeme, out var fieldValue)
+                ? fieldValue
+                : throw new RuntimeError(name, $"Undefined property '{name.Lexeme}'.");
+        }
     }
 }
