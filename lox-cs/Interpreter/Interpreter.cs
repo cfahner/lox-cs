@@ -124,6 +124,20 @@ namespace Lox.Interpreter
             return Evaluate(expr.Right);
         }
 
+        public object? VisitSetExpr(Expr.Set expr)
+        {
+            var @object = Evaluate(expr.Object);
+
+            if (@object is LoxInstance loxInstance)
+            {
+                var value = Evaluate(expr.Value);
+                loxInstance.Set(expr.Name, value);
+                return value;
+            }
+
+            throw new RuntimeError(expr.Name, $"Only class instances have properties.");
+        }
+
         public object? VisitVariableExpr(Expr.Variable expr)
         {
             return LookupVariable(expr.Name, expr);

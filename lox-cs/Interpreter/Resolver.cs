@@ -167,6 +167,13 @@ namespace Lox.Interpreter
             return null;
         }
 
+        public object? VisitSetExpr(Expr.Set expr)
+        {
+            Resolve(expr.Value);
+            Resolve(expr.Object);
+            return null;
+        }
+
         public object? VisitUnaryExpr(Expr.Unary expr)
         {
             Resolve(expr.Right);

@@ -230,6 +230,10 @@ namespace Lox.Parser
                 {
                     return new Expr.Assign(variableExpr.Name, value);
                 }
+                else if (expr is Expr.Get getExpr)
+                {
+                    return new Expr.Set(getExpr.Object, getExpr.Name, value);
+                }
 
                 _ = Error(equals, "Invalid assignment target.");
             }

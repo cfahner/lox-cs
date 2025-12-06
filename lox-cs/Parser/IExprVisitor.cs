@@ -16,6 +16,8 @@
 
         R VisitLogicalExpr(Expr.Logical expr);
 
+        R VisitSetExpr(Expr.Set expr);
+
         R VisitUnaryExpr(Expr.Unary expr);
 
         R VisitVariableExpr(Expr.Variable expr);

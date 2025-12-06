@@ -27,6 +27,9 @@ namespace Lox.Parser.ExprVisitors
         public string VisitLogicalExpr(Expr.Logical expr)
             => Parenthesize(expr.Operator.Lexeme, expr.Left, expr.Right);
 
+        public string VisitSetExpr(Expr.Set expr)
+            => Parenthesize($"set.{expr.Name.Lexeme}", expr.Object);
+
         public string VisitVariableExpr(Expr.Variable expr)
             => $"(var '{expr.Name}')";
 
