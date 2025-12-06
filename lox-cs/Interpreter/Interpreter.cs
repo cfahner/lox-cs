@@ -139,6 +139,14 @@ namespace Lox.Interpreter
             return null;
         }
 
+        public object? VisitClassStmt(Stmt.Class stmt)
+        {
+            _environment.Define(stmt.Name.Lexeme, null);
+            var @class = new LoxClass(stmt.Name.Lexeme);
+            _environment.Assign(stmt.Name, @class);
+            return null;
+        }
+
         public object? VisitExpressionStmt(Stmt.Expression stmt)
         {
             _ = Evaluate(stmt.Expr);

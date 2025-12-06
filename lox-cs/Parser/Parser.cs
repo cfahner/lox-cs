@@ -36,7 +36,9 @@ namespace Lox.Parser
         {
             try
             {
-                return Match(TokenType.Fun)
+                return Match(TokenType.Class)
+                    ? ClassDeclaration()
+                    : Match(TokenType.Fun)
                     ? Function("function")
                     : Match(TokenType.Var)
                     ? VarDeclaration()
@@ -47,6 +49,21 @@ namespace Lox.Parser
                 Synchronize();
                 return new Stmt.Expression(new Expr.Literal(null));
             }
+        }
+
+        private Stmt.Class ClassDeclaration()
+        {
+            var name = Consume(TokenType.Identifier, "Expected a class name after 'class' keyword.");
+            _ = Consume(TokenType.LeftBrace, "Expected '{' after class name.");
+
+            var methods = new List<Stmt.Function>();
+            while (!Check(TokenType.RightBrace) && !IsAtEnd)
+            {
+                methods.Add(Function("method"));
+            }
+
+            _ = Consume(TokenType.RightBrace, "Expected '}' after class body.");
+            return new Stmt.Class(name, methods);
         }
 
         private Stmt Statement()

@@ -36,6 +36,13 @@ namespace Lox.Interpreter
             return null;
         }
 
+        public object? VisitClassStmt(Stmt.Class stmt)
+        {
+            Declare(stmt.Name);
+            Define(stmt.Name);
+            return null;
+        }
+
         public object? VisitExpressionStmt(Stmt.Expression stmt)
         {
             Resolve(stmt.Expr);

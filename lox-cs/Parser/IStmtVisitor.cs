@@ -4,6 +4,8 @@
     {
         R VisitBlockStmt(Stmt.Block stmt);
 
+        R VisitClassStmt(Stmt.Class stmt);
+
         R VisitExpressionStmt(Stmt.Expression stmt);
 
         R VisitFunctionStmt(Stmt.Function stmt);
