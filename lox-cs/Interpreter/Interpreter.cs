@@ -18,6 +18,7 @@ namespace Lox.Interpreter
         {
             _environment = _globals;
             _globals.Define("clock", new Clock());
+            _globals.Define("currentDirectory", new CurrentDirectory());
         }
 
         public void Interpret(IEnumerable<Stmt> stmts)
