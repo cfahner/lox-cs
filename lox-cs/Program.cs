@@ -99,13 +99,14 @@ internal class Program
 
     private static void Report(RuntimeError runTimeError)
     {
-        Console.Error.WriteLine($"{runTimeError.Message}\n[line {runTimeError.Token.Line} at '{runTimeError.Token.Lexeme}']");
+        Console.Error.WriteLine($"{runTimeError.Message}\n[Runtime error on line {runTimeError.Token.Line} at '{runTimeError.Token.Lexeme}']");
         _hadRuntimeError = true;
     }
 
     private static void Report(ResolutionError resolutionError)
     {
-        Report(resolutionError.Token, resolutionError.Message);
+        Console.Error.WriteLine($"{resolutionError.Message}\n[Resolver error on line {resolutionError.Token.Line} at '{resolutionError.Token.Lexeme}']");
+        _hadRuntimeError = true;
     }
 
     private static void Report(Token token, string message)
