@@ -229,11 +229,14 @@ namespace Lox.Interpreter
 
         private void ResolveLocal(Expr expr, Token name)
         {
-            for (var i = _scopes.Count - 1; i >= 0; i -= 1)
+            // Apparently in C#, Stack.ElementAt() counts from the top of the stack
+            // But in Java, Stack.get() counts from the bottom of the stack
+            // So we have to count up in the C# implementation where the Java implementation counts down
+            for (var i = 0; i < _scopes.Count; i += 1)
             {
                 if (_scopes.ElementAt(i).ContainsKey(name.Lexeme))
                 {
-                    _interpreter.Resolve(expr, _scopes.Count - 1 - i);
+                    _interpreter.Resolve(expr, i);
                 }
             }
         }
