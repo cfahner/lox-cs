@@ -138,6 +138,11 @@ namespace Lox.Interpreter
             throw new RuntimeError(expr.Name, $"Only class instances have properties.");
         }
 
+        public object? VisitThisExpr(Expr.This expr)
+        {
+            return LookupVariable(expr.Keyword, expr);
+        }
+
         public object? VisitVariableExpr(Expr.Variable expr)
         {
             return LookupVariable(expr.Name, expr);

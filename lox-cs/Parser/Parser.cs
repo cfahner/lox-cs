@@ -379,6 +379,10 @@ namespace Lox.Parser
             {
                 return new Expr.Literal(Previous().Literal);
             }
+            if (Match(TokenType.This))
+            {
+                return new Expr.This(Previous());
+            }
             if (Match(TokenType.Identifier))
             {
                 return new Expr.Variable(Previous());

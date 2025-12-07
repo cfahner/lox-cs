@@ -41,11 +41,15 @@ namespace Lox.Interpreter
             Declare(stmt.Name);
             Define(stmt.Name);
 
+            BeginScope();
+            _scopes.Peek()["this"] = true;
+
             foreach (var method in stmt.Methods)
             {
                 ResolveFunction(method, FunctionType.Method);
             }
 
+            EndScope();
             return null;
         }
 
@@ -177,6 +181,12 @@ namespace Lox.Interpreter
         {
             Resolve(expr.Value);
             Resolve(expr.Object);
+            return null;
+        }
+
+        public object? VisitThisExpr(Expr.This expr)
+        {
+            ResolveLocal(expr, expr.Keyword);
             return null;
         }
 

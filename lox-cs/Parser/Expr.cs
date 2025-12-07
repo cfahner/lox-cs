@@ -44,6 +44,11 @@ namespace Lox.Parser
             public override R Accept<R>(IExprVisitor<R> visitor) => visitor.VisitSetExpr(this);
         }
 
+        public record This(Token Keyword) : Expr
+        {
+            public override R Accept<R>(IExprVisitor<R> visitor) => visitor.VisitThisExpr(this);
+        }
+
         public record Unary(Token Operator, Expr Right) : Expr
         {
             public override R Accept<R>(IExprVisitor<R> visitor) => visitor.VisitUnaryExpr(this);
