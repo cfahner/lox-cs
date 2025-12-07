@@ -2,7 +2,7 @@
 
 namespace Lox.Interpreter
 {
-    internal class LoxInstance(LoxClass @class)
+    public class LoxInstance(LoxClass @class)
     {
         public LoxClass Class { get; private init; } = @class;
 
