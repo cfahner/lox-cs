@@ -164,8 +164,14 @@ namespace Lox.Interpreter
         public object? VisitClassStmt(Stmt.Class stmt)
         {
             _environment.Define(stmt.Name.Lexeme, null);
-            var @class = new LoxClass(stmt.Name.Lexeme);
-            _ = _environment.Assign(stmt.Name, @class);
+
+            var methods = new Dictionary<string, LoxFunction>();
+            foreach (var method in stmt.Methods)
+            {
+                methods[method.Name.Lexeme] = new LoxFunction(method, _environment);
+            }
+
+            _ = _environment.Assign(stmt.Name, new LoxClass(stmt.Name.Lexeme, methods));
             return null;
         }
 

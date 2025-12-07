@@ -14,6 +14,8 @@ namespace Lox.Interpreter
         {
             return _fields.TryGetValue(name.Lexeme, out var fieldValue)
                 ? fieldValue
+                : Class.TryGetMethod(name.Lexeme, out var method)
+                ? method
                 : throw new RuntimeError(name, $"Undefined property '{name.Lexeme}'.");
         }
 

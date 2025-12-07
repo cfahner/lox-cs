@@ -7,7 +7,7 @@ namespace Lox.Interpreter
     {
         private enum FunctionType
         {
-            None, Function
+            None, Function, Method
         }
 
         private readonly Interpreter _interpreter = interpreter;
@@ -40,6 +40,12 @@ namespace Lox.Interpreter
         {
             Declare(stmt.Name);
             Define(stmt.Name);
+
+            foreach (var method in stmt.Methods)
+            {
+                ResolveFunction(method, FunctionType.Method);
+            }
+
             return null;
         }
 
