@@ -99,7 +99,7 @@ internal class Program
 
     private static void Report(RuntimeError runTimeError)
     {
-        Console.Error.WriteLine($"{runTimeError.Message}\n[line {runTimeError.Token.Line}]");
+        Console.Error.WriteLine($"{runTimeError.Message}\n[line {runTimeError.Token.Line} at '{runTimeError.Token.Lexeme}']");
         _hadRuntimeError = true;
     }
 
