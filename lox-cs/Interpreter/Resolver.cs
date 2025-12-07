@@ -10,11 +10,18 @@ namespace Lox.Interpreter
             None, Function, Method
         }
 
+        private enum ClassType
+        {
+            None, Class
+        }
+
         private readonly Interpreter _interpreter = interpreter;
 
         private readonly Stack<Dictionary<string, bool>> _scopes = [];
 
         private FunctionType _currentFunctionType = FunctionType.None;
+
+        private ClassType _currentClassType = ClassType.None;
 
         public void Resolve(IEnumerable<Stmt> stmts)
         {
@@ -38,6 +45,9 @@ namespace Lox.Interpreter
 
         public object? VisitClassStmt(Stmt.Class stmt)
         {
+            var enclosingClassType = _currentClassType;
+            _currentClassType = ClassType.Class;
+
             Declare(stmt.Name);
             Define(stmt.Name);
 
@@ -50,6 +60,8 @@ namespace Lox.Interpreter
             }
 
             EndScope();
+
+            _currentClassType = enclosingClassType;
             return null;
         }
 
@@ -186,6 +198,11 @@ namespace Lox.Interpreter
 
         public object? VisitThisExpr(Expr.This expr)
         {
+            if (_currentClassType == ClassType.None)
+            {
+                throw new ResolutionError(expr.Keyword, "Can't use 'this' outside class declaration.");
+            }
+
             ResolveLocal(expr, expr.Keyword);
             return null;
         }
