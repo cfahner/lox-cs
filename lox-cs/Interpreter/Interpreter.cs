@@ -173,7 +173,7 @@ namespace Lox.Interpreter
             var methods = new Dictionary<string, LoxFunction>();
             foreach (var method in stmt.Methods)
             {
-                methods[method.Name.Lexeme] = new LoxFunction(method, _environment);
+                methods[method.Name.Lexeme] = new LoxFunction(method, _environment, method.Name.Lexeme == "init");
             }
 
             _ = _environment.Assign(stmt.Name, new LoxClass(stmt.Name.Lexeme, methods));
@@ -188,7 +188,7 @@ namespace Lox.Interpreter
 
         public object? VisitFunctionStmt(Stmt.Function stmt)
         {
-            var function = new LoxFunction(stmt, _environment);
+            var function = new LoxFunction(stmt, _environment, false);
             _environment.Define(stmt.Name.Lexeme, function);
             return null;
         }

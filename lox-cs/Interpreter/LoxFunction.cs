@@ -10,17 +10,20 @@ namespace Lox.Interpreter
 
         private readonly Environment _closure;
 
-        public LoxFunction(Stmt.Function declaration, Environment closure)
+        private readonly bool _isInitializer;
+
+        public LoxFunction(Stmt.Function declaration, Environment closure, bool isInitializer)
         {
             _declaration = declaration;
             _closure = closure;
+            _isInitializer = isInitializer;
         }
 
         public LoxFunction Bind(LoxInstance instance)
         {
             var environment = new Environment(_closure);
             environment.Define("this", instance);
-            return new LoxFunction(_declaration, environment);
+            return new LoxFunction(_declaration, environment, _isInitializer);
         }
 
         public object? Call(Interpreter interpreter, object?[] arguments)
@@ -39,7 +42,10 @@ namespace Lox.Interpreter
             {
                 return returnValue.Value;
             }
-            return null;
+
+            return _isInitializer
+                ? _closure.GetAt(0, "this")
+                : null;
         }
 
         public override string ToString() => $"<fn {_declaration.Name.Lexeme}>";
