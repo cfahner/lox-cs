@@ -7,7 +7,7 @@ namespace Lox.Interpreter
     {
         private enum FunctionType
         {
-            None, Function, Method
+            None, Function, Initializer, Method
         }
 
         private enum ClassType
@@ -56,7 +56,7 @@ namespace Lox.Interpreter
 
             foreach (var method in stmt.Methods)
             {
-                ResolveFunction(method, FunctionType.Method);
+                ResolveFunction(method, method.Name.Lexeme == "init" ? FunctionType.Initializer : FunctionType.Method);
             }
 
             EndScope();
@@ -105,6 +105,10 @@ namespace Lox.Interpreter
 
             if (stmt.Value is not null)
             {
+                if (_currentFunctionType == FunctionType.Initializer)
+                {
+                    throw new ResolutionError(stmt.Keyword, "Attempt to return a value from 'init'.");
+                }
                 Resolve(stmt.Value);
             }
             return null;
