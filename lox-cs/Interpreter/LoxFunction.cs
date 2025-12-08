@@ -40,7 +40,9 @@ namespace Lox.Interpreter
             }
             catch (Return returnValue)
             {
-                return returnValue.Value;
+                return _isInitializer
+                    ? _closure.GetAt(0, "this")
+                    : returnValue.Value;
             }
 
             return _isInitializer
