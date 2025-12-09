@@ -55,7 +55,7 @@ namespace Lox.Interpreter
             {
                 if (stmt.Superclass.Name.Lexeme == stmt.Name.Lexeme)
                 {
-                    throw new ResolutionError(stmt.Name, $"Class '{stmt.Name}' tries to extend itself.");
+                    throw new ResolverError(stmt.Name, $"Class '{stmt.Name}' tries to extend itself.");
                 }
                 Resolve(stmt.Superclass);
             }
@@ -109,14 +109,14 @@ namespace Lox.Interpreter
         {
             if (_currentFunctionType == FunctionType.None)
             {
-                throw new ResolutionError(stmt.Keyword, "Attempt to return from top-level code.");
+                throw new ResolverError(stmt.Keyword, "Attempt to return from top-level code.");
             }
 
             if (stmt.Value is not null)
             {
                 if (_currentFunctionType == FunctionType.Initializer)
                 {
-                    throw new ResolutionError(stmt.Keyword, "Attempt to return a value from 'init'.");
+                    throw new ResolverError(stmt.Keyword, "Attempt to return a value from 'init'.");
                 }
                 Resolve(stmt.Value);
             }
@@ -147,7 +147,7 @@ namespace Lox.Interpreter
                 && scope.TryGetValue(expr.Name.Lexeme, out var defined)
                 && !defined)
             {
-                throw new ResolutionError(expr.Name, $"Can't read variable '{expr.Name.Lexeme}' in its own initializer.");
+                throw new ResolverError(expr.Name, $"Can't read variable '{expr.Name.Lexeme}' in its own initializer.");
             }
 
             ResolveLocal(expr, expr.Name);
@@ -213,7 +213,7 @@ namespace Lox.Interpreter
         {
             if (_currentClassType == ClassType.None)
             {
-                throw new ResolutionError(expr.Keyword, "Can't use 'this' outside class declaration.");
+                throw new ResolverError(expr.Keyword, "Can't use 'this' outside class declaration.");
             }
 
             ResolveLocal(expr, expr.Keyword);
@@ -236,7 +236,7 @@ namespace Lox.Interpreter
             {
                 if (scope.ContainsKey(name.Lexeme))
                 {
-                    throw new ResolutionError(name, $"A variable with name '{name.Lexeme}' already exists in this scope.");
+                    throw new ResolverError(name, $"A variable with name '{name.Lexeme}' already exists in this scope.");
                 }
                 scope[name.Lexeme] = false;
             }

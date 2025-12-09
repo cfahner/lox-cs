@@ -2,7 +2,7 @@
 
 namespace Lox.Interpreter
 {
-    public class ResolutionError(Token token, string message) : Exception(message)
+    public class ResolverError(Token token, string message) : Exception(message)
     {
         public Token Token { get; private init; } = token;
     }

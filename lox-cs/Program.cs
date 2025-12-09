@@ -83,7 +83,7 @@ internal class Program
         {
             Report(runTimeError);
         }
-        catch (ResolutionError resolutionError)
+        catch (ResolverError resolutionError)
         {
             Report(resolutionError);
         }
@@ -103,7 +103,7 @@ internal class Program
         _hadRuntimeError = true;
     }
 
-    private static void Report(ResolutionError resolutionError)
+    private static void Report(ResolverError resolutionError)
     {
         Console.Error.WriteLine($"{resolutionError.Message}\n[Resolver error on line {resolutionError.Token.Line} at '{resolutionError.Token.Lexeme}']");
         _hadRuntimeError = true;
