@@ -9,7 +9,7 @@ namespace Lox.Parser
             public override R Accept<R>(IStmtVisitor<R> visitor) => visitor.VisitBlockStmt(this);
         }
 
-        public record Class(Token Name, IEnumerable<Stmt.Function> Methods) : Stmt
+        public record Class(Token Name, Expr.Variable? Superclass, IEnumerable<Function> Methods) : Stmt
         {
             public override R Accept<R>(IStmtVisitor<R> visitor) => visitor.VisitClassStmt(this);
         }

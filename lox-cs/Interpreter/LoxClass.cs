@@ -1,8 +1,10 @@
 ﻿namespace Lox.Interpreter
 {
-    public class LoxClass(string name, IDictionary<string, LoxFunction> methods) : ILoxCallable
+    public class LoxClass(string name, LoxClass? superclass, IDictionary<string, LoxFunction> methods) : ILoxCallable
     {
         public string Name { get; private init; } = name;
+
+        public LoxClass? Superclass { get; private init; } = superclass;
 
         public int Arity => TryGetMethod("init", out var initializer)
             ? initializer.Arity

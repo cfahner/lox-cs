@@ -168,6 +168,14 @@ namespace Lox.Interpreter
 
         public object? VisitClassStmt(Stmt.Class stmt)
         {
+            LoxClass? superclass = null;
+            if (stmt.Superclass is not null)
+            {
+                superclass = Evaluate(stmt.Superclass) is LoxClass loxClass
+                    ? loxClass
+                    : throw new UnextendableVariableError(stmt.Superclass.Name);
+            }
+
             _environment.Define(stmt.Name.Lexeme, null);
 
             var methods = new Dictionary<string, LoxFunction>();
@@ -176,7 +184,7 @@ namespace Lox.Interpreter
                 methods[method.Name.Lexeme] = new LoxFunction(method, _environment, method.Name.Lexeme == "init");
             }
 
-            _ = _environment.Assign(stmt.Name, new LoxClass(stmt.Name.Lexeme, methods));
+            _ = _environment.Assign(stmt.Name, new LoxClass(stmt.Name.Lexeme, superclass, methods));
             return null;
         }
 

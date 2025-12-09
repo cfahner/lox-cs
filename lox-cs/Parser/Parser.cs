@@ -54,6 +54,14 @@ namespace Lox.Parser
         private Stmt.Class ClassDeclaration()
         {
             var name = Consume(TokenType.Identifier, "Expected a class name after 'class' keyword.");
+
+            Expr.Variable? superclass = null;
+            if (Match(TokenType.Less))
+            {
+                _ = Consume(TokenType.Identifier, "Expected superclass name after '<'.");
+                superclass = new Expr.Variable(Previous());
+            }
+
             _ = Consume(TokenType.LeftBrace, "Expected '{' after class name.");
 
             var methods = new List<Stmt.Function>();
@@ -63,7 +71,7 @@ namespace Lox.Parser
             }
 
             _ = Consume(TokenType.RightBrace, "Expected '}' after class body.");
-            return new Stmt.Class(name, methods);
+            return new Stmt.Class(name, superclass, methods);
         }
 
         private Stmt Statement()

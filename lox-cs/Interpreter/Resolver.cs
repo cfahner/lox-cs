@@ -51,6 +51,15 @@ namespace Lox.Interpreter
             Declare(stmt.Name);
             Define(stmt.Name);
 
+            if (stmt.Superclass is not null)
+            {
+                if (stmt.Superclass.Name.Lexeme == stmt.Name.Lexeme)
+                {
+                    throw new ResolutionError(stmt.Name, $"Class '{stmt.Name}' tries to extend itself.");
+                }
+                Resolve(stmt.Superclass);
+            }
+
             BeginScope();
             _scopes.Peek()["this"] = true;
 
