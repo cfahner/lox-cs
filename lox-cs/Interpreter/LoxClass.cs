@@ -28,7 +28,8 @@
 
         public bool TryGetMethod(string name, out LoxFunction method)
         {
-            return _methods.TryGetValue(name, out method!);
+            return _methods.TryGetValue(name, out method!)
+                || Superclass is not null && Superclass.TryGetMethod(name, out method!);
         }
     }
 }
