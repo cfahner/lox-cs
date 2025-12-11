@@ -138,6 +138,17 @@ namespace Lox.Interpreter
             throw new RuntimeError(expr.Name, $"Only class instances have properties.");
         }
 
+        public object? VisitSuperExpr(Expr.Super expr)
+        {
+            var distance = _locals[expr];
+            var superclass = _environment.GetAt(distance, "super") as LoxClass;
+            var instance = _environment.GetAt(distance - 1, "this") as LoxInstance;
+            return instance is not null && (superclass?.TryGetMethod(expr.Method.Lexeme, out var method) ?? false)
+                ? (object)method.Bind(instance)
+                : throw new UndefinedPropertyError(expr.Method);
+            ;
+        }
+
         public object? VisitThisExpr(Expr.This expr)
         {
             return LookupVariable(expr.Keyword, expr);
@@ -178,6 +189,13 @@ namespace Lox.Interpreter
 
             _environment.Define(stmt.Name.Lexeme, null);
 
+            var environmentBeforeSuperclass = _environment;
+            if (stmt.Superclass is not null)
+            {
+                _environment = new Environment(_environment);
+                _environment.Define("super", superclass);
+            }
+
             var methods = new Dictionary<string, LoxFunction>();
             foreach (var method in stmt.Methods)
             {
@@ -185,6 +203,11 @@ namespace Lox.Interpreter
             }
 
             _ = _environment.Assign(stmt.Name, new LoxClass(stmt.Name.Lexeme, superclass, methods));
+
+            if (superclass is not null)
+            {
+                _environment = environmentBeforeSuperclass;
+            }
             return null;
         }
 

@@ -58,6 +58,8 @@ namespace Lox.Interpreter
                     throw new ResolverError(stmt.Name, $"Class '{stmt.Name}' tries to extend itself.");
                 }
                 Resolve(stmt.Superclass);
+                BeginScope();
+                _scopes.Peek()["super"] = true;
             }
 
             BeginScope();
@@ -69,6 +71,11 @@ namespace Lox.Interpreter
             }
 
             EndScope();
+
+            if (stmt.Superclass is not null)
+            {
+                EndScope();
+            }
 
             _currentClassType = enclosingClassType;
             return null;
@@ -206,6 +213,12 @@ namespace Lox.Interpreter
         {
             Resolve(expr.Value);
             Resolve(expr.Object);
+            return null;
+        }
+
+        public object? VisitSuperExpr(Expr.Super expr)
+        {
+            ResolveLocal(expr, expr.Keyword);
             return null;
         }
 

@@ -387,6 +387,13 @@ namespace Lox.Parser
             {
                 return new Expr.Literal(Previous().Literal);
             }
+            if (Match(TokenType.Super))
+            {
+                var keyword = Previous();
+                _ = Consume(TokenType.Dot, "Expected '.' after 'super'.");
+                var method = Consume(TokenType.Identifier, "Expected superclass method name after 'super.'.");
+                return new Expr.Super(keyword, method);
+            }
             if (Match(TokenType.This))
             {
                 return new Expr.This(Previous());

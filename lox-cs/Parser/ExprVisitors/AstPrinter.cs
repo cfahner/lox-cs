@@ -30,6 +30,9 @@ namespace Lox.Parser.ExprVisitors
         public string VisitSetExpr(Expr.Set expr)
             => Parenthesize($"set.{expr.Name.Lexeme}", expr.Object);
 
+        public string VisitSuperExpr(Expr.Super expr)
+            => $"{expr.Keyword.Lexeme}.{expr.Method.Lexeme}";
+
         public string VisitThisExpr(Expr.This expr)
             => "this";
 

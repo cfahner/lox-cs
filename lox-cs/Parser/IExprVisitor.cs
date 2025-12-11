@@ -18,6 +18,8 @@
 
         R VisitSetExpr(Expr.Set expr);
 
+        R VisitSuperExpr(Expr.Super expr);
+
         R VisitThisExpr(Expr.This expr);
 
         R VisitUnaryExpr(Expr.Unary expr);
