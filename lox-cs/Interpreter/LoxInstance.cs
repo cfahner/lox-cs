@@ -1,4 +1,5 @@
-﻿using Lox.Scanner;
+﻿using Lox.Interpreter.RuntimeErrors;
+using Lox.Scanner;
 
 namespace Lox.Interpreter
 {
@@ -16,7 +17,7 @@ namespace Lox.Interpreter
                 ? fieldValue
                 : Class.TryGetMethod(name.Lexeme, out var method)
                 ? method.Bind(this)
-                : throw new RuntimeError(name, $"Undefined property '{name.Lexeme}'.");
+                : throw new UndefinedPropertyError(name);
         }
 
         public void Set(Token name, object? value)
