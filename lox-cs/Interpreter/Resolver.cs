@@ -12,7 +12,7 @@ namespace Lox.Interpreter
 
         private enum ClassType
         {
-            None, Class
+            None, Class, Subclass
         }
 
         private readonly Interpreter _interpreter = interpreter;
@@ -53,6 +53,7 @@ namespace Lox.Interpreter
 
             if (stmt.Superclass is not null)
             {
+                _currentClassType = ClassType.Subclass;
                 if (stmt.Superclass.Name.Lexeme == stmt.Name.Lexeme)
                 {
                     throw new ResolverError(stmt.Name, $"Class '{stmt.Name}' tries to extend itself.");
@@ -218,6 +219,14 @@ namespace Lox.Interpreter
 
         public object? VisitSuperExpr(Expr.Super expr)
         {
+            if (_currentClassType == ClassType.None)
+            {
+                throw new ResolverError(expr.Keyword, "Can't use 'super' outside of a class.");
+            }
+            else if (_currentClassType != ClassType.Subclass)
+            {
+                throw new ResolverError(expr.Keyword, "Can't use 'super' in a class without a superclass.");
+            }
             ResolveLocal(expr, expr.Keyword);
             return null;
         }
